@@ -1,15 +1,30 @@
 <template>
   <v-container>
-    <v-progress-circular
-      :size="70"
-      :width="7"
-      color="primary"
-      indeterminate
-      v-if="loading"
-    ></v-progress-circular>
-    <pre v-if="!loading">
+    <v-layout>
+      <v-flex>
+        <v-card class="mx-auto" max-width="400">
+          <v-card-title>
+            Create Board
+          </v-card-title>
+          <v-card-actions>
+            <v-btn color="orange" text>
+              Create
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-flex>
+      <v-progress-circular
+        :size="70"
+        :width="7"
+        color="primary"
+        indeterminate
+        v-if="loading"
+      ></v-progress-circular>
+      <pre v-if="!loading">
       {{ boards }}
-    </pre>
+    </pre
+      >
+    </v-layout>
   </v-container>
 </template>
 <script>
