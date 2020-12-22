@@ -1,7 +1,10 @@
 <template>
   <div class="home">
-    <v-btn :to="{ name: 'login' }">Go to Login</v-btn>
-    <v-btn :to="{ name: 'signup' }">Go to Signup</v-btn>
+    <v-container fluid>
+      <v-slide-y-transition mode="out-in">
+        <v-layout column align-center> </v-layout>
+      </v-slide-y-transition>
+    </v-container>
   </div>
 </template>
 

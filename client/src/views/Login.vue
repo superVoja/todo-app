@@ -5,33 +5,35 @@
     @keydown.prevent.enter
     v-if="!loading"
   >
-    <v-container>
-      <v-row>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="user.username"
-            :rules="notEmptyRules"
-            label="Username"
-            required
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" md="4">
-          <v-text-field
-            v-model="user.password"
-            :rules="notEmptyRules"
-            label="Password"
-            required
-          ></v-text-field>
-        </v-col>
-        <v-btn type="submit" :disabled="!valid">Login</v-btn>
-        <v-progress-circular
-          :size="70"
-          :width="7"
-          color="primary"
-          indeterminate
-          v-if="loading"
-        ></v-progress-circular>
-      </v-row>
+    <v-container fluid>
+      <v-slide-y-transition mode="out-in">
+        <v-layout column align-center>
+          <v-col cols="12" sm="4">
+            <v-text-field
+              v-model="user.username"
+              :rules="notEmptyRules"
+              label="Username"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="4">
+            <v-text-field
+              v-model="user.password"
+              :rules="notEmptyRules"
+              label="Password"
+              required
+            ></v-text-field>
+          </v-col>
+          <v-btn type="submit" :disabled="!valid">Login</v-btn>
+          <v-progress-circular
+            :size="70"
+            :width="7"
+            color="primary"
+            indeterminate
+            v-if="loading"
+          ></v-progress-circular>
+        </v-layout>
+      </v-slide-y-transition>
     </v-container>
   </v-form>
 </template>
@@ -61,6 +63,7 @@ export default {
           })
           .then(() => {
             console.log("Logged in!");
+            this.$router.push("/dashboard");
           })
           .catch((e) => {
             console.error("Authenticate error", e);
