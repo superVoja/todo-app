@@ -1,4 +1,4 @@
-const { authenticate } = require('@feathersjs/authentication');
+const { authenticate } = require('@feathersjs/authentication').hooks;
 const { setField } = require('feathers-authentication-hooks');
 
 module.exports = {
@@ -6,43 +6,43 @@ module.exports = {
     all: [ authenticate('jwt'),
     setField({
       from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
     }) 
     ],
     find: [
       setField({
         from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
       })
     ],
     get: [
       setField({
         from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
       })
     ],
     create: [
       setField({
         from: 'params.user._id',
-        as: 'data.sentBy'
+        as: 'ownerId'
       })
     ],
     update: [
       setField({
         from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
       })
     ],
     patch: [
       setField({
         from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
       })
     ],
     remove: [
       setField({
         from: 'params.user._id',
-      as: 'params.query.id'
+      as: 'ownerId'
       })
     ]
   },

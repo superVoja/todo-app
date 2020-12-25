@@ -1,12 +1,12 @@
 <template>
-  <v-form
-    v-model="valid"
-    @submit.prevent="login()"
-    @keydown.prevent.enter
-    v-if="!loading"
-  >
-    <v-container fluid>
-      <v-slide-y-transition mode="out-in">
+  <v-container fluid>
+    <v-slide-y-transition mode="out-in">
+      <v-form
+        v-model="valid"
+        @submit.prevent="login()"
+        @keydown.prevent.enter
+        v-if="!loading"
+      >
         <v-layout column align-center>
           <v-col cols="12" sm="4">
             <v-text-field
@@ -33,9 +33,9 @@
             v-if="loading"
           ></v-progress-circular>
         </v-layout>
-      </v-slide-y-transition>
-    </v-container>
-  </v-form>
+      </v-form>
+    </v-slide-y-transition>
+  </v-container>
 </template>
 <script>
 import { mapState } from "vuex";

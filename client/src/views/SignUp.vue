@@ -86,8 +86,6 @@ export default {
   methods: {
     signUp() {
       if (this.valid) {
-        //console.log("Form is valid, Welcome", this.user);
-
         const { User } = this.$FeathersVuex.api;
 
         const user = new User(this.user);

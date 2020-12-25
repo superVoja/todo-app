@@ -1,7 +1,5 @@
-// users-model.js - A mongoose model
-//
-// See http://mongoosejs.com/docs/models.html
-// for more of what you can do here.
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 module.exports = function (app) {
   const modelName = 'users'
   const mongooseClient = app.get('mongooseClient')
@@ -9,7 +7,7 @@ module.exports = function (app) {
 
     username: { 
       type: String, 
-      unique: true, 
+      required: true
     },
     displayName: { 
       type: String, 
@@ -23,7 +21,7 @@ module.exports = function (app) {
       type: String,
       required: true 
     },
-
+    
   }, {
     timestamps: true
   })
