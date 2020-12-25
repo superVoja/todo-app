@@ -18,7 +18,7 @@ module.exports = function (app) {
     memberIds: [{
       type: Schema.Types.ObjectId,
       ref: 'users',
-      
+      index: { unique: true, sparse: true }
     }],
   }, {
     timestamps: true

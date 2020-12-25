@@ -1,5 +1,3 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 module.exports = function (app) {
   const modelName = 'users'
   const mongooseClient = app.get('mongooseClient')

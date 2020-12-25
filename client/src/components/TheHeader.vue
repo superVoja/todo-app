@@ -10,6 +10,14 @@
       <v-toolbar-items v-if="user">
         <v-btn @click="logout" depressed>Logout</v-btn>
       </v-toolbar-items>
+      <v-toolbar-items v-if="user">
+        <v-avatar>
+          <img :src="user.user.imageUrl" />
+        </v-avatar>
+      </v-toolbar-items>
+      <v-toolbar-items v-if="user">
+        {{ user.user.displayName }}
+      </v-toolbar-items>
     </v-app-bar>
   </div>
 </template>

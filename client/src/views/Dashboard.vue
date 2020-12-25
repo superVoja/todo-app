@@ -99,9 +99,16 @@ export default {
       loading: "isFindPending",
       creating: "isCreatePending",
     }),
+    ...mapState("auth", { user: "payload" }),
     ...mapGetters("boards", { findBoardsInStore: "find" }),
     boards() {
-      return this.findBoardsInStore().data;
+      return this.user
+        ? this.findBoardsInStore({
+            query: {
+              ownerId: this.user._id,
+            },
+          }).data
+        : [];
     },
   },
 };
