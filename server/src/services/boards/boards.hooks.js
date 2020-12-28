@@ -21,9 +21,7 @@ module.exports = {
         as: 'params.query.ownerId'
       })
     ],
-    get: [
-      limitToUser
-    ],
+    get: [],
     create: [
       setField({
         from: 'params.user._id',
