@@ -2,14 +2,14 @@
   <v-container flud>
     <v-slide-y-transition mode="out-in">
       <v-layout align-center wrap>
-        <v-progress-circular
+        <!-- <v-progress-circular
           v-if="creating"
           :size="70"
           :width="7"
           indeterminate
           color="primary"
         >
-        </v-progress-circular>
+        </v-progress-circular> -->
         <v-card class="mx-auto pa-6" max-width="344">
           <v-card-title>Create Board</v-card-title>
           <v-form

@@ -1,7 +1,7 @@
 <template>
   <v-container flud>
     <v-slide-y-transition mode="out-in">
-      <v-layout row align-center wrap>
+      <v-layout class="d-flex column mb-6">
         <v-progress-circular
           v-if="loadingBoard || loadingLists"
           :size="70"
@@ -11,49 +11,65 @@
         >
         </v-progress-circular>
         <h2 v-if="board">{{ board.name }}</h2>
-        <div v-if="!loadingLists">
-          <v-flex sm3 v-for="list in lists" :key="list._id" pa-2>
-            <v-card class="mx-auto" max-width="400">
-              <v-card-title>{{ list.name }}</v-card-title>
-            </v-card>
-          </v-flex>
+        <div v-if="!loadingLists" class="d-flex">
+          <v-card max-width="374" v-for="list in lists" :key="list._id">
+            <v-card-title>{{ list.name }}</v-card-title>
+            <v-col>
+              <v-card color="#385F73" dark>
+                <ul v-if="cardsByListId[list._id]">
+                  <v-card
+                    v-for="card in cardsByListId[list._id]"
+                    :key="card._id"
+                  >
+                    {{ card.title }}
+                  </v-card>
+                </ul>
+              </v-card>
+            </v-col>
+            <create-card
+              :boardId="$route.params.id"
+              :listId="list._id"
+            ></create-card>
+          </v-card>
+          <v-card max-width="344">
+            <v-card-title>Create List</v-card-title>
+            <v-form
+              v-model="validList"
+              @submit.prevent="createList"
+              @keydown.prevent.enter
+              v-if="!creatingList"
+            >
+              <v-layout column align-center>
+                <v-col cols="12">
+                  <v-text-field
+                    v-model="list.name"
+                    :rules="notEmptyRules"
+                    label="Name"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-btn type="submit" :disabled="!validList">Create List</v-btn>
+                <v-progress-circular
+                  v-if="creatingList"
+                  :size="70"
+                  :width="7"
+                  indeterminate
+                  color="primary"
+                >
+                </v-progress-circular>
+              </v-layout>
+            </v-form>
+          </v-card>
         </div>
-        <v-card class="mx-auto pa-6" max-width="344">
-          <v-card-title>Create List</v-card-title>
-          <v-form
-            v-model="validList"
-            @submit.prevent="createList"
-            @keydown.prevent.enter
-            v-if="!creatingList"
-          >
-            <v-layout column align-center>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="list.name"
-                  :rules="notEmptyRules"
-                  label="Name"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-btn type="submit" :disabled="!validList">Create List</v-btn>
-              <v-progress-circular
-                v-if="creatingList"
-                :size="70"
-                :width="7"
-                indeterminate
-                color="primary"
-              >
-              </v-progress-circular>
-            </v-layout>
-          </v-form>
-        </v-card>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
+import CreateCard from "../components/CreateCard.vue";
 export default {
+  components: { CreateCard },
   name: "boards",
   data() {
     return {
@@ -80,13 +96,21 @@ export default {
     }).then((response) => {
       const lists = response.data || response;
     });
+    this.findCards({
+      query: {
+        boardId: this.$route.params.id,
+      },
+    }).then((response) => {
+      const cards = response.data || response;
+    });
   },
   methods: {
     ...mapActions("boards", { getBoard: "get" }),
     ...mapActions("lists", { findLists: "find" }),
+    ...mapActions("cards", { findCards: "find" }),
     createList() {
       if (this.validList) {
-        console.log(this.list);
+        //console.log(this.list);
         const { Lists } = this.$FeathersVuex.api;
         this.list.boardId = this.$route.params.id;
         const list = new Lists(this.list);
@@ -104,12 +128,27 @@ export default {
       creatingList: "isCreatePending",
     }),
     ...mapGetters("lists", { findListsInStore: "find" }),
+    ...mapGetters("cards", { findCardsInStore: "find" }),
     lists() {
       return this.findListsInStore({
         query: {
           boardId: this.$route.params.id,
         },
       }).data;
+    },
+    cards() {
+      return this.findCardsInStore({
+        query: {
+          boardId: this.$route.params.id,
+        },
+      }).data;
+    },
+    cardsByListId() {
+      return this.cards.reduce((byId, card) => {
+        byId[card.listId] = byId[card.listId] || [];
+        byId[card.listId].push(card);
+        return byId;
+      }, {});
     },
   },
 };
