@@ -3,9 +3,6 @@
     <v-main>
       <TheHeader />
       <router-view> </router-view>
-      <pre>
-        {{ user }}
-      </pre>
     </v-main>
   </v-app>
 </template>

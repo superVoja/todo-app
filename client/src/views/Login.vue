@@ -61,7 +61,7 @@ export default {
             username: this.user.username,
             password: this.user.password,
           })
-          .then(() => {
+          .then((result) => {
             console.log("Logged in!");
             this.$router.push("/dashboard");
           })

@@ -10,8 +10,10 @@ class MyJwtStrategy extends JWTStrategy {
     if (user && user.permissions) {
       payload.permissions = user.permissions;
     }
-    payload.user = user;
+   
     return payload;
+
+
   }
 }
 

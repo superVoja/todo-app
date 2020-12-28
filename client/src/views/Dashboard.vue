@@ -38,7 +38,7 @@
             </v-layout>
           </v-form>
         </v-card>
-        <div v-if="!loading">
+        <div v-if="user">
           <v-flex
             v-for="board in boards"
             :key="board._id"
@@ -91,6 +91,7 @@ export default {
         const board = new Boards(this.board);
 
         board.save();
+        //console.log(this.board._id);
       }
     },
   },
@@ -100,13 +101,14 @@ export default {
       creating: "isCreatePending",
     }),
     ...mapState("auth", { user: "payload" }),
+
     ...mapGetters("boards", { findBoardsInStore: "find" }),
     boards() {
+      //console.log(this.user.user._id);
+
       return this.user
         ? this.findBoardsInStore({
-            query: {
-              ownerId: this.user._id,
-            },
+            query: { ownerId: this.user.user._id },
           }).data
         : [];
     },

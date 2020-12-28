@@ -1,49 +1,43 @@
 const { authenticate } = require('@feathersjs/authentication').hooks;
 const { setField } = require('feathers-authentication-hooks');
 
+const setUserId = setField({
+  from: 'params.user._id',
+  as: 'data.userId'
+});
+
+const limitToUser = setField({
+  from: 'params.user._id',
+  as: 'params.query.userId'
+});
 module.exports = {
   before: {
     all: [ authenticate('jwt'),
-    setField({
-      from: 'params.user._id',
-      as: 'ownerId'
-    }) 
+    
     ],
     find: [
       setField({
         from: 'params.user._id',
-      as: 'ownerId'
+        as: 'params.query.ownerId'
       })
     ],
     get: [
-      setField({
-        from: 'params.user._id',
-      as: 'ownerId'
-      })
+      limitToUser
     ],
     create: [
       setField({
         from: 'params.user._id',
-        as: 'ownerId'
+        as: 'data.ownerId'
       })
     ],
     update: [
-      setField({
-        from: 'params.user._id',
-      as: 'ownerId'
-      })
+      limitToUser
     ],
     patch: [
-      setField({
-        from: 'params.user._id',
-      as: 'ownerId'
-      })
+      limitToUser
     ],
     remove: [
-      setField({
-        from: 'params.user._id',
-      as: 'ownerId'
-      })
+      limitToUser
     ]
   },
 
