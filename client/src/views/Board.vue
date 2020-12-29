@@ -12,14 +12,23 @@
         </v-progress-circular>
         <h2 v-if="board">{{ board.name }}</h2>
         <div v-if="!loadingLists" class="d-flex">
-          <v-card max-width="374" v-for="list in lists" :key="list._id">
+          <v-card
+            max-width="374"
+            v-for="list in lists"
+            :key="list._id"
+            @dragover="setDroppingList($event, list)"
+            :class="{ green: droppingList == list }"
+          >
             <v-card-title>{{ list.name }}</v-card-title>
             <v-col>
-              <v-card color="#385F73" dark>
+              <v-card>
                 <ul v-if="cardsByListId[list._id]">
                   <v-card
                     v-for="card in cardsByListId[list._id]"
                     :key="card._id"
+                    draggable="true"
+                    @dragstart="startDraggingCard(card)"
+                    @dragend="dropCard()"
                   >
                     {{ card.title }}
                   </v-card>
@@ -73,6 +82,8 @@ export default {
   name: "boards",
   data() {
     return {
+      draggingCard: null,
+      droppingList: null,
       validList: false,
       //creating: false,
       board: {},
@@ -117,6 +128,22 @@ export default {
 
         list.save();
       }
+    },
+    startDraggingCard(card) {
+      console.log("Started dragging ", card);
+      this.draggingCard = card;
+    },
+    setDroppingList(event, list) {
+      this.droppingList = list;
+      event.preventDefault();
+    },
+    dropCard() {
+      if (this.droppingList) {
+        this.draggingCard.listId = this.droppingList._id;
+        this.draggingCard.save();
+      }
+      this.droppingList = null;
+      this.draggingCard = null;
     },
   },
   computed: {
