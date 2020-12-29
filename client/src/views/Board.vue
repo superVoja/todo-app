@@ -10,6 +10,11 @@
           color="primary"
         >
         </v-progress-circular>
+        <div v-if="boardsError">
+          <v-alert type="error" :value="boardsError">
+            {{ boardsError.message }}
+          </v-alert>
+        </div>
         <h2 v-if="board">{{ board.name }}</h2>
         <div v-if="!loadingLists" class="d-flex">
           <v-card
@@ -149,10 +154,15 @@ export default {
   computed: {
     ...mapState("boards", {
       loadingBoard: "isGetPending",
+      boardsError: "errorOnGet",
     }),
     ...mapState("lists", {
       loadingLists: "isFindPending",
       creatingList: "isCreatePending",
+      listsError: "errorOnFind",
+    }),
+    ...mapState("cards", {
+      cardsError: "errorOnFind",
     }),
     ...mapGetters("lists", { findListsInStore: "find" }),
     ...mapGetters("cards", { findCardsInStore: "find" }),
