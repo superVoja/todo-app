@@ -1,13 +1,16 @@
 <template>
-  <v-card>
-    <v-card-media height="200px" :src="board.background"></v-card-media>
-    <v-card-title primary-title>
-      <div class="headline">{{ board.name }}</div>
-    </v-card-title>
+  <v-card class="" width="344">
+    <v-img :src="board.background" height="200px"></v-img>
+    <v-card-title>{{ board.name }}</v-card-title>
     <v-card-actions>
-      <v-btn color="primary" :to="{ name: 'board', params: { id: board._id } }"
-        >Go</v-btn
+      <v-btn
+        color="orange lighten-2"
+        text
+        :to="{ name: 'board', params: { id: board._id } }"
       >
+        Go to
+      </v-btn>
+      <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
 </template>

@@ -1,8 +1,6 @@
 <template>
-  <v-container flud>
-    <v-slide-y-transition mode="out-in">
-      <v-layout align-center wrap>
-        <!-- <v-progress-circular
+  <v-flex row>
+    <!-- <v-progress-circular
           v-if="creating"
           :size="70"
           :width="7"
@@ -10,89 +8,38 @@
           color="primary"
         >
         </v-progress-circular> -->
-        <v-card class="mx-auto pa-6" max-width="344">
-          <v-card-title>Create Board</v-card-title>
-          <v-form
-            v-model="valid"
-            @submit.prevent="createBoard"
-            @keydown.prevent.enter
-          >
-            <v-layout column align-center>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="board.name"
-                  :rules="notEmptyRules"
-                  label="Name"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="board.background"
-                  :rules="notEmptyRules"
-                  label="Background"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-btn type="submit" :disabled="!valid">Create</v-btn>
-            </v-layout>
-          </v-form>
-        </v-card>
-        <div v-if="user">
-          <v-flex
-            v-for="board in boards"
-            :key="board._id"
-            class="pa-1 flex-row"
-          >
-            <v-card class="mx-auto pa-4" max-width="344">
-              <v-img :src="board.background" height="200px"></v-img>
-              <v-card-title>{{ board.name }}</v-card-title>
-              <v-card-actions>
-                <v-btn
-                  color="orange lighten-2"
-                  text
-                  :to="{ name: 'board', params: { id: board._id } }"
-                >
-                  Go to
-                </v-btn>
-                <v-spacer></v-spacer>
-              </v-card-actions>
-            </v-card>
-          </v-flex>
-        </div>
-      </v-layout>
-    </v-slide-y-transition>
-  </v-container>
+    <create-board
+      :creating="creating"
+      :createBoard="createBoard"
+    ></create-board>
+    <v-flex v-for="board in boards" :key="board._id" class="pa-1">
+      <single-board :board="board"></single-board>
+    </v-flex>
+  </v-flex>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 
+import CreateBoard from "../components/CreateBoard";
+import SingleBoard from "../components/SingleBoard.vue";
+
 export default {
   name: "dashboard",
-  data() {
-    return {
-      valid: false,
-      notEmptyRules: [(v) => !!v || "Cannot be empty!"],
-      board: {
-        name: "",
-        background: "",
-      },
-    };
+  components: {
+    CreateBoard,
+    SingleBoard,
   },
-  components: {},
-  created() {
+  mounted() {
     this.findBoards({ query: {} });
   },
   methods: {
     ...mapActions("boards", { findBoards: "find" }),
-    createBoard() {
-      if (this.valid) {
-        const { Boards } = this.$FeathersVuex.api;
-        const board = new Boards(this.board);
+    async createBoard(board) {
+      const { Boards } = this.$FeathersVuex.api;
+      const newBoard = new Boards(board);
 
-        board.save();
-        //console.log(this.board._id);
-      }
+      await newBoard.save();
+      //console.log(this.board._id);
     },
   },
   computed: {

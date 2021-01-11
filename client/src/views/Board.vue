@@ -49,51 +49,14 @@
                   :listId="list._id"
                 ></create-card>
               </v-card>
-              <v-card max-width="344">
-                <v-card-title>Create List</v-card-title>
-                <v-form
-                  v-model="validList"
-                  @submit.prevent="createList"
-                  @keydown.prevent.enter
-                  v-if="!creatingList"
-                >
-                  <v-layout column align-center>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="list.name"
-                        :rules="notEmptyRules"
-                        label="Name"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-btn type="submit" :disabled="!validList"
-                      >Create List</v-btn
-                    >
-                    <v-progress-circular
-                      v-if="creatingList"
-                      :size="70"
-                      :width="7"
-                      indeterminate
-                      color="primary"
-                    >
-                    </v-progress-circular>
-                  </v-layout>
-                </v-form>
-              </v-card>
+              <create-list
+                :createList="createList"
+                :creatingList="creatingList"
+              ></create-list>
             </div>
           </v-layout>
         </v-flex>
-        <v-flex>
-          <v-card>
-            <v-card-title>Activity Log</v-card-title>
-            <v-list v-for="task in activityLog" :key="task._id" class="pa-2">
-              <v-list-item-content>
-                <v-list-item-title v-html="markdownify(task.text)">
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list>
-          </v-card>
-        </v-flex>
+        <activities :activityLog="activityLog"></activities>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -101,9 +64,16 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import CreateCard from "../components/CreateCard.vue";
-import marked from "marked";
+import Activities from "../components/Activities";
+import CreateList from "../components/CreateList";
+import { notEmptyRules } from "../validators";
+
 export default {
-  components: { CreateCard },
+  components: {
+    CreateCard,
+    CreateList,
+    Activities,
+  },
   name: "boards",
   data() {
     return {
@@ -112,7 +82,7 @@ export default {
       validList: false,
       //creating: false,
       board: {},
-      notEmptyRules: [(v) => !!v || "Name is required"],
+      notEmptyRules,
       list: {
         name: "",
         order: 0,
@@ -122,22 +92,16 @@ export default {
   },
 
   mounted() {
-    this.getBoard(this.$route.params.id).then((response) => {
-      this.board = response.data || response;
-    });
+    this.getBoard(this.$route.params.id);
     this.findLists({
       query: {
         boardId: this.$route.params.id,
       },
-    }).then((response) => {
-      const lists = response.data || response;
     });
     this.findCards({
       query: {
         boardId: this.$route.params.id,
       },
-    }).then((response) => {
-      const cards = response.data || response;
     });
     this.findTasks({
       query: {
