@@ -62,6 +62,7 @@
   </v-form>
 </template>
 <script>
+import { notEmptyRules } from "@/validators";
 import { mapState } from "vuex";
 export default {
   name: "SignUp",
@@ -74,7 +75,7 @@ export default {
       password: "",
       confirmPassword: "",
     },
-    notEmptyRules: [(v) => !!v || "Name is required"],
+    notEmptyRules,
     confirmPasswordRules: [
       (confirmPassword) =>
         confirmPassword === vm.user.password || "Password must match",

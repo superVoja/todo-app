@@ -1,0 +1,1 @@
+export const notEmptyRules = [(v) => !!v || "Name is required"] ;

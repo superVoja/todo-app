@@ -4,6 +4,8 @@ import Vuex from 'vuex'
 import { FeathersVuex } from '../feathers-client'
 import auth from './store.auth'
 
+import localAuth from './localAuth'
+
 Vue.use(Vuex)
 Vue.use(FeathersVuex)
 
@@ -20,6 +22,9 @@ const servicePlugins = requireModule
   .map(modulePath => requireModule(modulePath).default)
 
 export default new Vuex.Store({
+  modules:{
+    localAuth,
+  },
   state: {},
   mutations: {},
   actions: {},

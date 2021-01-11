@@ -8,37 +8,19 @@
         <v-btn :to="{ name: 'signup' }" depressed>SignUp</v-btn>
       </v-toolbar-items>
       <v-toolbar-items v-if="user">
+        <AppAvatar :user="user.user" />
         <v-btn @click="logout" depressed>Logout</v-btn>
-      </v-toolbar-items>
-      <v-toolbar-items v-if="user">
-        <v-toolbar-items v-if="user">
-          {{ user.user.displayName }}
-        </v-toolbar-items>
-        <v-avatar>
-          <img :src="user.user.imageUrl" />
-        </v-avatar>
       </v-toolbar-items>
     </v-app-bar>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
+import AppAvatar from "./AppAvatar";
 export default {
-  computed: {
-    ...mapState("auth", { user: "payload" }),
-  },
-  methods: {
-    logout() {
-      this.$store
-        .dispatch("auth/logout")
-        .then(() => {
-          this.$router.push("/login");
-          console.log("User logout");
-        })
-        .catch((e) => {
-          console.log("Error");
-        });
-    },
+  props: ["user", "logout"],
+  components: {
+    AppAvatar,
   },
 };
 </script>

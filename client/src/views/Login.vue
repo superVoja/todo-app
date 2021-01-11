@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
       <v-form
         v-model="valid"
-        @submit.prevent="login()"
+        @submit.prevent="login({ valid, user })"
         @keydown.prevent.enter
         v-if="!loading"
       >
@@ -38,7 +38,8 @@
   </v-container>
 </template>
 <script>
-import { mapState } from "vuex";
+import { notEmptyRules } from "@/validators";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Login",
   data: (vm) => ({
@@ -47,29 +48,13 @@ export default {
       username: "",
       password: "",
     },
-    notEmptyRules: [(v) => !!v || "Name is required"],
+    notEmptyRules,
   }),
   computed: {
     ...mapState("auth", { loading: "isAuthenticatePending" }),
   },
   methods: {
-    login() {
-      if (this.valid) {
-        this.$store
-          .dispatch("auth/authenticate", {
-            strategy: "local",
-            username: this.user.username,
-            password: this.user.password,
-          })
-          .then((result) => {
-            console.log("Logged in!");
-            this.$router.push("/dashboard");
-          })
-          .catch((e) => {
-            console.error("Authenticate error", e);
-          });
-      }
-    },
+    ...mapActions("localAuth", ["login"]),
   },
 };
 </script>

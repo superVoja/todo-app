@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main>
-      <TheHeader />
+      <TheHeader :user="user" :logout="logout" />
       <router-view> </router-view>
     </v-main>
   </v-app>
@@ -16,13 +16,22 @@ export default {
   components: {
     TheHeader,
   },
-
-  data: () => ({
-    //
-  }),
   computed: {
     ...mapState("auth", { user: "payload" }),
   },
-  mounted() {},
+
+  methods: {
+    logout() {
+      this.$store
+        .dispatch("auth/logout")
+        .then(() => {
+          this.$router.push("/login");
+          console.log("User logout");
+        })
+        .catch((e) => {
+          console.log("Error");
+        });
+    },
+  },
 };
 </script>
