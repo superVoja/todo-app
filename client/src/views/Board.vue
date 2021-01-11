@@ -43,6 +43,8 @@
                   </v-card>
                 </v-col>
                 <create-card
+                  :user="user.user"
+                  :createActivity="createActivity"
                   :boardId="$route.params.id"
                   :listId="list._id"
                 ></create-card>
@@ -81,13 +83,12 @@
             </div>
           </v-layout>
         </v-flex>
-        <v-flex xs2>
+        <v-flex>
           <v-card>
-            <v-card-title>Tasks</v-card-title>
+            <v-card-title>Activity Log</v-card-title>
             <v-list v-for="task in activityLog" :key="task._id" class="pa-2">
               <v-list-item-content>
-                <v-list-item-title>
-                  {{ task.text }}
+                <v-list-item-title v-html="markdownify(task.text)">
                 </v-list-item-title>
               </v-list-item-content>
             </v-list>
@@ -100,6 +101,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
 import CreateCard from "../components/CreateCard.vue";
+import marked from "marked";
 export default {
   components: { CreateCard },
   name: "boards",
@@ -158,10 +160,9 @@ export default {
         const list = new Lists(this.list);
 
         await list.save();
-        const task = new Tasks();
-        task.text = `${this.user.user.displayName} created list ${list.name}`;
-        task.boardId = this.$route.params.id;
-        task.save();
+        this.createActivity(
+          `**${this.user.user.displayName}** created list **${list.name}**`
+        );
       }
     },
     startDraggingCard(card) {
@@ -172,13 +173,34 @@ export default {
       this.droppingList = list;
       event.preventDefault();
     },
-    dropCard() {
+    async dropCard() {
       if (this.droppingList) {
-        this.draggingCard.listId = this.droppingList._id;
-        this.draggingCard.save();
+        if (this.draggingCard.listId !== this.droppingList._id) {
+          const fromList = this.lists.find(
+            (list) => list._id === this.draggingCard.listId
+          );
+          const toList = this.lists.find(
+            (list) => list._id === this.droppingList._id
+          );
+          this.draggingCard.listId = this.droppingList._id;
+          await this.draggingCard.save();
+          this.createActivity(
+            `**${this.user.user.displayName}** moved card **${this.draggingCard.title}** from **${fromList.name}** to **${toList.name}**`
+          );
+        }
       }
       this.droppingList = null;
       this.draggingCard = null;
+    },
+    markdownify(text) {
+      return marked(text);
+    },
+    createActivity(text) {
+      const { Tasks } = this.$FeathersVuex.api;
+      const task = new Tasks();
+      task.text = text;
+      task.boardId = this.$route.params.id;
+      task.save();
     },
   },
   computed: {

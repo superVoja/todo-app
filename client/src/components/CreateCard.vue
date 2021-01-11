@@ -30,7 +30,7 @@
 import { mapState } from "vuex";
 export default {
   name: "create-card",
-  props: ["listId", "boardId"],
+  props: ["listId", "boardId", "createActivity", "user"],
   data() {
     return {
       validCard: false,
@@ -52,6 +52,10 @@ export default {
         const card = new Cards(this.card);
         this.creatingCard = true;
         await card.save();
+        this.createActivity(
+          `**${this.user.displayName}** created card **${card.title}**`
+        );
+        //console.log(this.user);
         this.creatingCard = false;
         this.card = {
           title: "",
