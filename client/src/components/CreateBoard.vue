@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="344">
+  <v-card width="344" class="pa-2">
     <v-card-title>Create Board</v-card-title>
     <v-form v-model="valid" @submit.prevent="onCreate" @keydown.prevent.enter>
       <v-layout column align-center>

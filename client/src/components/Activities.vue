@@ -1,19 +1,17 @@
 <template>
-  <v-flex>
-    <v-card>
+  <v-card>
+    <v-container class="grey lighten-5">
       <v-card-title>Activity Log</v-card-title>
-      <v-list v-for="task in activityLog" :key="task._id" class="pa-2">
-        <v-list-item-content>
-          <v-icon color="green">fas fa-edit</v-icon>
-        </v-list-item-content>
-
-        <v-list-item-content>
-          <v-list-item-title v-html="markdownify(task.text)">
-          </v-list-item-title>
-        </v-list-item-content>
-      </v-list>
-    </v-card>
-  </v-flex>
+      <v-row v-for="task in activityLog" :key="task._id">
+        <v-col cols="2" md="2">
+          <v-icon color="green darken-2">
+            mdi-calendar-plus
+          </v-icon>
+        </v-col>
+        <v-col cols="8" md="8" v-html="markdownify(task.text)"> </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 <script>
 import marked from "marked";

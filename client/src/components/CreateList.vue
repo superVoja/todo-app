@@ -1,9 +1,9 @@
 <template>
-  <v-card max-width="344">
+  <v-card max-width="344" class="pa-3">
     <v-card-title>Create List</v-card-title>
     <v-form
       v-model="validList"
-      @submit.prevent="createList"
+      @submit.prevent="onCreateList"
       @keydown.prevent.enter
       v-if="!creatingList"
     >
@@ -35,11 +35,7 @@ export default {
   props: ["createList", "creatingList"],
   data() {
     return {
-      draggingCard: null,
-      droppingList: null,
       validList: false,
-      //creating: false,
-      board: {},
       notEmptyRules,
       list: {
         name: "",
@@ -47,6 +43,18 @@ export default {
         archived: false,
       },
     };
+  },
+  methods: {
+    onCreateList() {
+      if (this.validList) {
+        this.createList(this.list);
+        this.list = {
+          name: "",
+          order: 0,
+          archived: false,
+        };
+      }
+    },
   },
 };
 </script>

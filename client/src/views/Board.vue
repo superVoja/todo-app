@@ -79,15 +79,7 @@ export default {
     return {
       draggingCard: null,
       droppingList: null,
-      validList: false,
-      //creating: false,
       board: {},
-      notEmptyRules,
-      list: {
-        name: "",
-        order: 0,
-        archived: false,
-      },
     };
   },
 
@@ -116,18 +108,15 @@ export default {
     ...mapActions("lists", { findLists: "find" }),
     ...mapActions("cards", { findCards: "find" }),
     ...mapActions("tasks", { findTasks: "find" }),
-    async createList() {
-      if (this.validList) {
-        //console.log(this.list);
-        const { Lists, Tasks } = this.$FeathersVuex.api;
-        this.list.boardId = this.$route.params.id;
-        const list = new Lists(this.list);
+    async createList(list) {
+      const { Lists } = this.$FeathersVuex.api;
+      list.boardId = this.$route.params.id;
+      const newList = new Lists(list);
 
-        await list.save();
-        this.createActivity(
-          `**${this.user.user.displayName}** created list **${list.name}**`
-        );
-      }
+      await newList.save();
+      await this.createActivity(
+        `**${this.user.user.displayName}** created list **${list.name}**`
+      );
     },
     startDraggingCard(card) {
       console.log("Started dragging ", card);
@@ -159,12 +148,12 @@ export default {
     markdownify(text) {
       return marked(text);
     },
-    createActivity(text) {
+    async createActivity(text) {
       const { Tasks } = this.$FeathersVuex.api;
       const task = new Tasks();
       task.text = text;
       task.boardId = this.$route.params.id;
-      task.save();
+      await task.save();
     },
   },
   computed: {

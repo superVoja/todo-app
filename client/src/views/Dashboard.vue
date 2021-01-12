@@ -1,21 +1,18 @@
 <template>
-  <v-flex row>
-    <!-- <v-progress-circular
-          v-if="creating"
-          :size="70"
-          :width="7"
-          indeterminate
-          color="primary"
-        >
-        </v-progress-circular> -->
-    <create-board
-      :creating="creating"
-      :createBoard="createBoard"
-    ></create-board>
-    <v-flex v-for="board in boards" :key="board._id" class="pa-1">
-      <single-board :board="board"></single-board>
-    </v-flex>
-  </v-flex>
+  <v-container fluid>
+    <v-row dense>
+      <create-board
+        :creating="creating"
+        :createBoard="createBoard"
+        width="344"
+      ></create-board>
+      <v-col v-for="board in boards" :key="board._id">
+        <v-card width="344">
+          <single-board :board="board"></single-board>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -62,3 +59,8 @@ export default {
   },
 };
 </script>
+<style scoped>
+.col {
+  flex-grow: 0;
+}
+</style>
