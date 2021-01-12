@@ -36,6 +36,7 @@
             <v-text-field
               v-model="user.password"
               :rules="notEmptyRules"
+              type="password"
               label="Password"
               required
             ></v-text-field>
@@ -44,6 +45,7 @@
             <v-text-field
               v-model="user.confirmPassword"
               :rules="confirmPasswordRules"
+              type="password"
               label="Confirm Password"
               required
             ></v-text-field>

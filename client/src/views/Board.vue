@@ -3,7 +3,7 @@
     <v-slide-y-transition mode="out-in">
       <v-layout>
         <v-flex xs10>
-          <v-layout class="d-flex column mb-6">
+          <v-layout class="d-flex">
             <v-progress-circular
               v-if="loadingBoard || loadingLists"
               :size="70"
@@ -17,7 +17,10 @@
                 {{ boardsError.message }}
               </v-alert>
             </div>
-            <h2 v-if="board">{{ board.name }}</h2>
+            <create-list
+              :createList="createList"
+              :creatingList="creatingList"
+            ></create-list>
             <div v-if="!loadingLists" class="d-flex">
               <v-card
                 max-width="374"
@@ -49,10 +52,6 @@
                   :listId="list._id"
                 ></create-card>
               </v-card>
-              <create-list
-                :createList="createList"
-                :creatingList="creatingList"
-              ></create-list>
             </div>
           </v-layout>
         </v-flex>
@@ -118,6 +117,13 @@ export default {
         `**${this.user.user.displayName}** created list **${list.name}**`
       );
     },
+    async createActivity(text) {
+      const { Tasks } = this.$FeathersVuex.api;
+      const task = new Tasks();
+      task.text = text;
+      task.boardId = this.$route.params.id;
+      await task.save();
+    },
     startDraggingCard(card) {
       console.log("Started dragging ", card);
       this.draggingCard = card;
@@ -147,13 +153,6 @@ export default {
     },
     markdownify(text) {
       return marked(text);
-    },
-    async createActivity(text) {
-      const { Tasks } = this.$FeathersVuex.api;
-      const task = new Tasks();
-      task.text = text;
-      task.boardId = this.$route.params.id;
-      await task.save();
     },
   },
   computed: {

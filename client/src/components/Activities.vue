@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-container class="grey lighten-5">
-      <v-card-title>Activity Log</v-card-title>
+      <v-card-title class="text-no-wrap">Activity Log</v-card-title>
       <v-row v-for="task in activityLog" :key="task._id">
         <v-col cols="2" md="2">
           <v-icon color="green darken-2">
