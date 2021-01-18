@@ -43,7 +43,7 @@ import { notEmptyRules } from "@/validators";
 import { mapActions, mapState } from "vuex";
 export default {
   name: "Login",
-  data: (vm) => ({
+  data: () => ({
     valid: false,
     user: {
       username: "",

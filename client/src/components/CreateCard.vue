@@ -27,7 +27,7 @@
   </v-form>
 </template>
 <script>
-import { mapState } from "vuex";
+import { notEmptyRules } from "../validators";
 export default {
   name: "create-card",
   props: ["listId", "boardId", "createActivity", "user"],
@@ -35,7 +35,7 @@ export default {
     return {
       validCard: false,
       creatingCard: false,
-      notEmptyRules: [(v) => !!v || "title is required"],
+      notEmptyRules,
       card: {
         title: "",
         members: [],

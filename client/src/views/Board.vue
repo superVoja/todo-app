@@ -46,7 +46,7 @@
                   </v-card>
                 </v-col>
                 <create-card
-                  :user="user.user"
+                  :user="user ? user.user : {}"
                   :createActivity="createActivity"
                   :boardId="$route.params.id"
                   :listId="list._id"
@@ -98,8 +98,6 @@ export default {
       query: {
         boardId: this.$route.params.id,
       },
-    }).then((response) => {
-      const tasks = response.data || response;
     });
   },
   methods: {
