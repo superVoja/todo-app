@@ -1,85 +1,90 @@
 <template>
-  <v-container flud>
-    <v-slide-y-transition mode="out-in">
-      <v-layout>
-        <v-flex xs10>
-          <v-layout class="d-flex">
-            <v-progress-circular
-              v-if="loadingBoard || loadingLists"
-              :size="70"
-              :width="7"
-              indeterminate
-              color="primary"
-            >
-            </v-progress-circular>
-            <div v-if="boardsError">
-              <v-alert type="error" :value="boardsError">
-                {{ boardsError.message }}
-              </v-alert>
-            </div>
-            <create-list
-              :createList="createList"
-              :creatingList="creatingList"
-            ></create-list>
-            <div v-if="!loadingLists" class="d-flex">
-              <v-card
-                max-width="374"
-                v-for="list in lists"
-                :key="list._id"
-                @dragover="setDroppingList($event, list)"
-                :class="{ green: droppingList == list }"
-                class="pa-2 list"
+  <div
+    class="background"
+    :style="{ backgroundImage: 'url(' + board.background + ')' }"
+  >
+    <v-container flud>
+      <v-slide-y-transition mode="out-in">
+        <v-layout>
+          <v-flex xs10>
+            <v-layout class="d-flex">
+              <v-progress-circular
+                v-if="loadingBoard || loadingLists"
+                :size="70"
+                :width="7"
+                indeterminate
+                color="primary"
               >
-                <v-row>
-                  <v-card-title>{{ list.name }}</v-card-title>
+              </v-progress-circular>
+              <div v-if="boardsError">
+                <v-alert type="error" :value="boardsError">
+                  {{ boardsError.message }}
+                </v-alert>
+              </div>
+              <create-list
+                :createList="createList"
+                :creatingList="creatingList"
+              ></create-list>
+              <div v-if="!loadingLists" class="d-flex">
+                <v-card
+                  max-width="374"
+                  v-for="list in lists"
+                  :key="list._id"
+                  @dragover="setDroppingList($event, list)"
+                  :class="{ green: droppingList == list }"
+                  class="pa-2 list"
+                >
+                  <v-row>
+                    <v-card-title>{{ list.name }}</v-card-title>
 
-                  <v-icon
-                    flat
-                    color="red darken-1"
-                    class="on-hover"
-                    @click="removeList(list)"
-                  >
-                    mdi-close-circle
-                  </v-icon>
-                </v-row>
+                    <v-icon
+                      flat
+                      color="red darken-1"
+                      class="on-hover"
+                      @click="removeList(list)"
+                    >
+                      mdi-close-circle
+                    </v-icon>
+                  </v-row>
 
-                <v-col>
-                  <v-card>
-                    <ul v-if="cardsByListId[list._id]" class="pa-0">
-                      <v-card
-                        v-for="card in cardsByListId[list._id]"
-                        :key="card._id"
-                        draggable="true"
-                        @dragstart="startDraggingCard(card)"
-                        @dragend="dropCard()"
-                      >
-                        <v-icon
-                          flat
-                          x-small
-                          color="red darken-1"
-                          @click="removeCard(card)"
+                  <v-col>
+                    <v-card>
+                      <ul v-if="cardsByListId[list._id]" class="pa-0">
+                        <v-card
+                          v-for="card in cardsByListId[list._id]"
+                          :key="card._id"
+                          draggable="true"
+                          @dragstart="startDraggingCard(card)"
+                          @dragend="dropCard()"
                         >
-                          mdi-close-circle
-                        </v-icon>
-                        {{ card.title }}
-                      </v-card>
-                    </ul>
-                  </v-card>
-                </v-col>
-                <create-card
-                  :user="user ? user.user : {}"
-                  :createActivity="createActivity"
-                  :boardId="$route.params.id"
-                  :listId="list._id"
-                ></create-card>
-              </v-card>
-            </div>
-          </v-layout>
-        </v-flex>
-        <activities :activityLog="activityLog"></activities>
-      </v-layout>
-    </v-slide-y-transition>
-  </v-container>
+                          <v-icon
+                            flat
+                            x-small
+                            color="red darken-1"
+                            @click="removeCard(card)"
+                          >
+                            mdi-close-circle
+                          </v-icon>
+                          {{ card.title }}
+                        </v-card>
+                      </ul>
+                    </v-card>
+                  </v-col>
+                  <create-card
+                    :user="user ? user.user : {}"
+                    :createActivity="createActivity"
+                    :boardId="$route.params.id"
+                    :listId="list._id"
+                  ></create-card>
+                </v-card>
+              </div>
+            </v-layout>
+          </v-flex>
+          <activities :activityLog="activityLog"></activities>
+        </v-layout>
+      </v-slide-y-transition>
+    </v-container>
+  </div>
 </template>
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -105,7 +110,11 @@ export default {
   },
 
   mounted() {
-    this.getBoard(this.$route.params.id);
+    this.getBoard(this.$route.params.id).then((result) => {
+      this.board = result;
+      console.log(this.board);
+    });
+
     this.findLists({
       query: {
         boardId: this.$route.params.id,
@@ -242,6 +251,22 @@ export default {
 };
 </script>
 <style scoped>
+.background {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+.background::before {
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(253, 242, 242, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 .on-hover {
   display: none;
 }
