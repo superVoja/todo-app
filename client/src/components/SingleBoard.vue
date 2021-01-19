@@ -11,11 +11,28 @@
         Go to
       </v-btn>
       <v-spacer></v-spacer>
+      <v-icon class="on-hover" @click="removeBoard(board)">
+        mdi-delete
+      </v-icon>
     </v-card-actions>
   </v-card>
 </template>
 <script>
+import { mapActions } from "vuex";
 export default {
   props: ["board"],
+  methods: {
+    ...mapActions("boards", { remove: "remove" }),
+
+    removeBoard(board) {
+      console.log(board);
+      this.$store.dispatch("boards/remove", board._id);
+    },
+  },
 };
 </script>
+<style scoped>
+.on-hover:hover {
+  color: #ff9800;
+}
+</style>

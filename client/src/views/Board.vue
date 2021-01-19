@@ -28,11 +28,24 @@
                 :key="list._id"
                 @dragover="setDroppingList($event, list)"
                 :class="{ green: droppingList == list }"
+                class="pa-2 list"
               >
-                <v-card-title>{{ list.name }}</v-card-title>
+                <v-row>
+                  <v-card-title>{{ list.name }}</v-card-title>
+
+                  <v-icon
+                    flat
+                    color="red darken-1"
+                    class="on-hover"
+                    @click="removeList(list)"
+                  >
+                    mdi-close-circle
+                  </v-icon>
+                </v-row>
+
                 <v-col>
                   <v-card>
-                    <ul v-if="cardsByListId[list._id]">
+                    <ul v-if="cardsByListId[list._id]" class="pa-0">
                       <v-card
                         v-for="card in cardsByListId[list._id]"
                         :key="card._id"
@@ -40,6 +53,14 @@
                         @dragstart="startDraggingCard(card)"
                         @dragend="dropCard()"
                       >
+                        <v-icon
+                          flat
+                          x-small
+                          color="red darken-1"
+                          @click="removeCard(card)"
+                        >
+                          mdi-close-circle
+                        </v-icon>
                         {{ card.title }}
                       </v-card>
                     </ul>
@@ -79,6 +100,7 @@ export default {
       draggingCard: null,
       droppingList: null,
       board: {},
+      isHidden: true,
     };
   },
 
@@ -102,8 +124,8 @@ export default {
   },
   methods: {
     ...mapActions("boards", { getBoard: "get" }),
-    ...mapActions("lists", { findLists: "find" }),
-    ...mapActions("cards", { findCards: "find" }),
+    ...mapActions("lists", { findLists: "find", remove: "remove" }),
+    ...mapActions("cards", { findCards: "find", remove: "remove" }),
     ...mapActions("tasks", { findTasks: "find" }),
     async createList(list) {
       const { Lists } = this.$FeathersVuex.api;
@@ -113,6 +135,21 @@ export default {
       await newList.save();
       await this.createActivity(
         `**${this.user.user.displayName}** created list **${list.name}**`
+      );
+    },
+    async removeList(list) {
+      console.log(list);
+      await this.$store.dispatch("lists/remove", list._id);
+      await this.createActivity(
+        `**${this.user.user.displayName}** deleted list **${list.name}** `
+      );
+    },
+
+    async removeCard(card) {
+      console.log(card);
+      await this.$store.dispatch("cards/remove", card._id);
+      await this.createActivity(
+        `**${this.user.user.displayName}** deleted card **${card.title}** `
       );
     },
     async createActivity(text) {
@@ -204,3 +241,11 @@ export default {
   },
 };
 </script>
+<style scoped>
+.on-hover {
+  display: none;
+}
+.list:hover .on-hover {
+  display: block;
+}
+</style>

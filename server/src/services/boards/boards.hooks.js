@@ -35,7 +35,7 @@ module.exports = {
       limitToUser
     ],
     remove: [
-      limitToUser
+      
     ]
   },
 

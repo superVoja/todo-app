@@ -28,5 +28,5 @@
       "passwordField": "password"
     }
   },
-  "mongodb": "MONGO_DB_URI"
+  "mongodb": "MONGO_DB_URL"
 }
