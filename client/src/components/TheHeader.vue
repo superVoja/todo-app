@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-app-bar color="">
-      <v-toolbar-title>Todo App</v-toolbar-title>
+      <router-link to="/dashboard" class="link">
+        <v-toolbar-title>Todo App</v-toolbar-title>
+      </router-link>
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="!user">
         <v-btn :to="{ name: 'login' }" depressed>Login</v-btn>
@@ -15,7 +17,6 @@
   </div>
 </template>
 <script>
-import { mapState } from "vuex";
 import AppAvatar from "./AppAvatar";
 export default {
   props: ["user", "logout"],
@@ -24,3 +25,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+a {
+  text-decoration: none;
+  color: #222;
+}
+</style>

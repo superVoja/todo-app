@@ -7,7 +7,7 @@
       <v-slide-y-transition mode="out-in">
         <v-layout>
           <v-flex xs10>
-            <v-layout class="d-flex">
+            <v-layout>
               <v-progress-circular
                 v-if="loadingBoard || loadingLists"
                 :size="70"
@@ -25,14 +25,14 @@
                 :createList="createList"
                 :creatingList="creatingList"
               ></create-list>
-              <div v-if="!loadingLists" class="d-flex">
+              <div v-if="!loadingLists" class="d-flex flex-wrap">
                 <v-card
                   max-width="374"
                   v-for="list in lists"
                   :key="list._id"
                   @dragover="setDroppingList($event, list)"
                   :class="{ green: droppingList == list }"
-                  class="pa-2 list"
+                  class="pa-2 list ma-1"
                 >
                   <v-row>
                     <v-card-title>{{ list.name }}</v-card-title>
@@ -57,15 +57,12 @@
                           @dragstart="startDraggingCard(card)"
                           @dragend="dropCard()"
                         >
-                          <v-icon
-                            flat
-                            x-small
-                            color="red darken-1"
-                            @click="removeCard(card)"
-                          >
-                            mdi-close-circle
-                          </v-icon>
-                          {{ card.title }}
+                          <div class="d-flex justify-space-between pa-1 my-1">
+                            {{ card.title }}
+                            <v-icon flat x-small @click="removeCard(card)">
+                              mdi-pen
+                            </v-icon>
+                          </div>
                         </v-card>
                       </ul>
                     </v-card>

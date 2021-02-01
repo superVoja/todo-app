@@ -1,5 +1,5 @@
 <template>
-  <v-card max-width="344" class="pa-3">
+  <v-card max-width="344" max-height="260" class="pa-3">
     <v-card-title>Create List</v-card-title>
     <v-form
       v-model="validList"
@@ -16,7 +16,9 @@
             required
           ></v-text-field>
         </v-col>
-        <v-btn type="submit" :disabled="!validList">Create List</v-btn>
+        <v-btn type="submit" color="success" :disabled="!validList"
+          >Create List</v-btn
+        >
         <v-progress-circular
           v-if="creatingList"
           :size="70"

@@ -14,7 +14,9 @@
           required
         ></v-text-field>
       </v-col>
-      <v-btn type="submit" :disabled="!validCard">Create Card</v-btn>
+      <v-btn type="submit" color="success" :disabled="!validCard"
+        >Create Card</v-btn
+      >
       <v-progress-circular
         v-if="creatingCard"
         :size="70"
